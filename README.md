@@ -1,24 +1,29 @@
-# cefhelper
+## Warning: This project is still under development and cannot be put into service!
 
-## Project setup
-```
-pnpm install
-```
+---
 
-### Compiles and hot-reloads for development
-```
-pnpm run serve
-```
+[English](./README.md)
+[简体中文](./README_CN.md)
 
-### Compiles and minifies for production
-```
-pnpm run build
-```
+# How to build
 
-### Lints and fixes files
+## Init && Install Modules
+
+Using CNPM (For Chinese)
 ```
-pnpm run lint
+cnpm i
+```
+Using PNPM
+```
+pnpm i
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Hot-Reload for delevop
+```
+npm run electron:serve
+```
+
+### Build install pack for users
+```
+npm run electron:build
+```
