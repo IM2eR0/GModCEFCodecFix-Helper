@@ -1,12 +1,14 @@
 <template>
     <span>
         <div id="app">
-            <h1>关于 GCCF-Helper</h1>
+            <h1>关于 GModCEFCodecFix-Helper</h1>
             <hr>
-            <p>本软件诞生于一个让我爆炸的夜晚</p>
-            <p>我实在是受不了玩家经常在群里发问：这个怎么办呀？这是怎么回事呀？</p>
-            <p>我明明已经写的很清楚了，但你们仍不愿意根据步骤解决</p>
-            <p>一气之下写了这个软件</p>
+            <div>相关链接：</div>
+            <el-button type="text" @click="openUrl('https://github.com/IM2eR0/GModCEFCodecFix-Helper')">GitHub</el-button>
+            <el-button type="text" @click="openUrl('https://qm.qq.com/cgi-bin/qm/qr?k=CdxYcWwLgVHeEKkk8ESCbeUi_1J9GeZv&jump_from=webapi&authKey=zah9xEa2hrd9nYezGAVS1dSF3cPKXjiD8H4bdoXG9ehssDQ2d5CtXPQ9iMBnnUzN')">QQ群</el-button>
+            <el-button type="text" @click="alert('还没做！')">KOOK</el-button>
+            <el-button type="text" @click="alert('还没做！')">Discord</el-button>
+            <el-button type="text" @click="alert('还没做！')">Telegram</el-button>
             <hr>
             <p>软件作者：昵称违规喵</p>
             <p @click="oiiaiooooiai">当前版本号：{{ $version }}</p>
@@ -23,6 +25,7 @@
     </span>
 </template>
 <script>
+import {ipcRenderer} from 'electron'
 export default {
     name: 'AboutPage',
     data() {
@@ -40,6 +43,14 @@ export default {
         nyan(){
             document.getElementsByTagName('audio')[0].pause()
             this.dialogVisible = false
+        },
+        openUrl(url){
+            ipcRenderer.send("openBrowser",url)
+        },
+        alert(msg) {
+            this.$alert(msg, '提示', {
+                confirmButtonText: '确定'
+            })
         }
     }
 }

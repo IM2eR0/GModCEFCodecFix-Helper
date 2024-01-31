@@ -90,7 +90,7 @@ app.on('ready', async () => {
     }
   }
   createWindow()
-  ipcMain.handle("dialog:openFile",handleFileOpen)
+  ipcMain.handle("dialog:openFile", handleFileOpen)
 })
 
 // Exit cleanly on request from parent process in development mode.
@@ -151,15 +151,15 @@ ipcMain.on('quitapp', () => {
 })
 
 // 新增：处理打开文件对话框的函数
-async function handleFileOpen(){
+async function handleFileOpen() {
   const options = {
     title: 'Select a Folder',
     properties: ['openDirectory']
   };
- const {canceled,filePaths}=await dialog.showOpenDialog(options)
-  if (canceled){
+  const { canceled, filePaths } = await dialog.showOpenDialog(options)
+  if (canceled) {
     return
-  }else {
+  } else {
     return filePaths[0]
   }
 }
@@ -170,36 +170,78 @@ const path = require('path')
 import * as VDF from '@node-steam/vdf';
 
 // 读取Steam路径IPC
-ipcMain.on('getSteamPath',(e)=>{
+ipcMain.on('getSteamPath', (e) => {
   var regKey = new winreg({
     hive: winreg.HKCU,
     key: '\\Software\\Valve\\Steam'
   })
-  regKey.get('SteamPath',(err,r)=>{
-    if(err){
-      e.sender.send("steamPath_result","")
-    }else{
+  regKey.get('SteamPath', (err, r) => {
+    if (err) {
+      e.sender.send("steamPath_result", "")
+    } else {
       // e.sender.send("steamPath_result",r.value)
-      const steamPath = path.join(r.value,"steamapps","libraryfolders.vdf")
-      const steamUser = path.join(r.value,"config","loginusers.vdf")
-      fs.access(steamPath,(err)=>{
-        // console.log(err);
-        if(err){
-          e.sender.send("steamPath_result","")
-        }else{
+      const steamPath = path.join(r.value, "steamapps", "libraryfolders.vdf")
+      const steamUser = path.join(r.value, "config", "loginusers.vdf")
+      fs.access(steamPath, (err) => {
+        if (err) {
+          e.sender.send("steamPath_result", "")
+        } else {
           // 发送基本Steam路径
-          e.sender.send("steamPath_result",r.value)
+          e.sender.send("steamPath_result", r.value)
 
           //获取 SteamLibrary 信息
-          fs.readFile(steamPath,{flag: 'r', encoding: 'utf8'},(_,data)=>{
-            e.sender.send("steamLibraryInfo",VDF.parse(data))
+          const steamLibrary = fs.readFileSync(steamPath, { flag: 'r', encoding: 'utf8' })
+          // console.log(steamLibrary);
+
+          const libfolder = VDF.parse(steamLibrary).libraryfolders
+          e.sender.send("steamLibraryInfo", {
+            path: steamPath.replace(/\\/g, "/"),
+            data: VDF.parse(steamLibrary)
           })
-          //获取 Steam User 信息
-          fs.readFile(steamUser,{flag: 'r', encoding: 'utf8'},(_,data)=>{
-            e.sender.send("steamUserInfo",VDF.parse(data))
+          
+          // 获取GMOD安装路径
+          const gmodpath = []
+          for(let key in libfolder){
+            if(libfolder[key]["apps"]["4000"]){
+              const realfolder = libfolder[key]["path"].replace(/\\\\/g,"/")
+              try{
+                var data = fs.readFileSync(path.join(realfolder,'steamapps',"appmanifest_4000.acf"),{ flag: 'r', encoding: 'utf8'})
+                // console.log(VDF.parse(data))
+              }catch{
+
+              }
+            }
+          }
+
+          // 获取Steam用户信息
+          const steamUserInfo = fs.readFileSync(steamUser,{ flag: 'r', encoding: 'utf8' })
+          e.sender.send("steamUserInfo", {
+            path: steamUser.replace(/\\/g, "/"),
+            data: VDF.parse(steamUserInfo)
           })
+          e.sender.send("load_success")
         }
       })
     }
   })
+})
+
+const openDefaultBrowser = function (url) {
+  var exec = require('child_process').exec;
+  console.log(process.platform)
+  switch (process.platform) {
+    case "darwin":
+      exec('open ' + url);
+      break;
+    case "win32":
+      exec('start ' + url);
+      break;
+    default:
+      exec('xdg-open', [url]);
+  }
+}
+
+// 打开系统默认浏览器
+ipcMain.on("openBrowser", (e, msg) => {
+  openDefaultBrowser(msg)
 })

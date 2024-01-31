@@ -8,10 +8,21 @@
                 <el-button icon="el-icon-folder-opened" @click="selectFolder"></el-button>
             </el-form-item>
 
-            <el-form-item label="Steam用户文件" prop="steamPath">
-                <el-input v-model="appSettings.steamPath" disabled style="width: 450px;"></el-input>
-                <el-button icon="el-icon-folder-opened" @click="selectFolder"></el-button>
+            <el-form-item label="Steam路径" prop="steamPath">
+                <el-input v-model="$steamPath" disabled style="width: 450px;"></el-input>
+                <el-button icon="el-icon-folder-opened" disabled></el-button>
             </el-form-item>
+
+            <el-form-item label="Steam Library" prop="steamLibrary">
+                <el-input v-model="$steamLibrary.path" disabled style="width: 450px;"></el-input>
+                <el-button icon="el-icon-folder-opened" disabled></el-button>
+            </el-form-item>
+
+            <el-form-item label="Steam 用户数据" prop="steamUser">
+                <el-input v-model="$steamUser.path" disabled style="width: 450px;"></el-input>
+                <el-button icon="el-icon-folder-opened" disabled></el-button>
+            </el-form-item>
+
         </el-form>
     </div>
 </template>
@@ -44,7 +55,6 @@ export default{
         }
     },
     mounted: function(){
-        
     }
 }
 </script>

@@ -15,8 +15,12 @@
                 <div>软件版本：{{ $version }}</div>
                 <div>在线版本：{{ onlineVersion }}</div>
                 <br>
+                <div>Steam路径：{{ $steamPath ? "已找到" : "未找到，请检查设置" }}</div>
+                <div>Steam Library：{{ $steamLibrary.data ? "已挂载 " + $steamLibrary.length + " 个 Library" : "Steam路径有误" }}</div>
+                <div>Steam User：{{ "已作为 " + $steamLoginUser.AccountName + " 登录" }}</div>
+                <br>
 
-                <div style="color: green;" v-if="sysinfo.issupport && $version == onlineVersion">
+                <div style="color: green;" v-if="sysinfo.issupport && $version == onlineVersion && $steamPath">
                     恭喜！你的系统支持 GModCEFCodecFix！
                     <br>
                     软件理论上可以运行，如果遇到问题请反馈！
@@ -27,6 +31,9 @@
                     </div>
                     <div style="color: red;" v-if="$version != onlineVersion">
                         软件有更新，请安装最新版！
+                    </div>
+                    <div style="color: red;" v-if="!$steamPath">
+                        未找到Steam路径，请检查设置后重新尝试
                     </div>
                 </div>
             </span>
@@ -56,7 +63,7 @@ export default {
             dialogVisible: false,
             sysinfo: [],
             onlineVersion: '',
-            updateHistory: false
+            updateHistory: false,
         }
     },
     methods: {
@@ -65,6 +72,10 @@ export default {
             this.onlineVersion = sessionStorage.appVersion
             this.dialogVisible = true
         }
+    },
+    mounted: function(){
+        // console.log("=== STEAM LIBRARY ===",this.$steamLibrary);
+        // console.log("=== STEAM USER ===",this.$steamUser);
     }
 }
 </script>
