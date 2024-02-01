@@ -43,6 +43,16 @@ ipcRenderer.on('steamUserInfo',(_,data)=>{
     }
   }
 })
+/* eslint-disable */
+async function getAppMainifest(sysinfo){
+  axios.get("https://vr.nekogan.com/d/GModCEFCodecFix/manifest.json").then((res)=>{
+    Vue.prototype.$mainifest = res.data[sysinfo.platfrom]
+  })
+}
+
+ipcRenderer.on("sysinfo_callback",async (_,data)=>{
+  await getAppMainifest(data)
+})
 
 ipcRenderer.on('load_success',()=>{
   new Vue({

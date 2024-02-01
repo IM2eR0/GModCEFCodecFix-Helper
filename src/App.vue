@@ -14,16 +14,11 @@
           <RouterViewPage />
         </el-main>
       </el-container>
-
-      <!-- <el-footer class="footer">
-        <p>Powered by 昵称违规喵</p>
-      </el-footer> -->
     </el-container>
   </div>
 </template>
 
 <script>
-/* eslint-disable */
 import LeftMenu from '@/components/leftmenu.vue';
 import RouterViewPage from './components/RouterViewPage.vue';
 import framebar from './components/framebar.vue';
@@ -47,7 +42,6 @@ export default {
     }
   },
   mounted: function () {
-    var sfdata = []
     const loading = this.$loading({
       lock: true,
       text: '初始化中，请稍后',

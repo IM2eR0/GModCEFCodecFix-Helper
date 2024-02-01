@@ -2,11 +2,12 @@
     <div id="app">
         <h1>软件设置</h1>
         <hr>
+        <p style="color: red;">警告：设置页面暂不可用，目前只能查看软件获取到的目录</p>
         <el-form label-width="auto" label-position="left" :model="appSettings">
-            <el-form-item label="缓存目录" prop="tempFolder">
+            <!-- <el-form-item label="缓存目录" prop="tempFolder">
                 <el-input v-model="appSettings.tempFolder" disabled style="width: 450px;"></el-input>
                 <el-button icon="el-icon-folder-opened" @click="selectFolder"></el-button>
-            </el-form-item>
+            </el-form-item> -->
 
             <el-form-item label="Steam路径" prop="steamPath">
                 <el-input v-model="$steamPath" disabled style="width: 450px;"></el-input>
